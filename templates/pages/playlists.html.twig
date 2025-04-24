@@ -1,12 +1,13 @@
 {% extends "basefront.html.twig" %}
 {% block body %}
     <table class="table table-striped">
+        <caption class="text-start text-muted mb-2">Liste des playlists disponibles avec leurs catégories</caption>
         <thead>
             <tr>
                 <th class="text-left align-top" scope="col">
                     playlist<br />
-                    <a href="{{ path('playlists.sort', {champ:'name', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
-                    <a href="{{ path('playlists.sort', {champ:'name', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>
+                    <a href="{{ path('playlists.sort', {champ:'name', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">&lt;</a>
+                    <a href="{{ path('playlists.sort', {champ:'name', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">&gt;</a>
                     <form class="form-inline mt-1" method="POST" action="{{ path('playlists.findallcontain', {champ:'name'}) }}">
                         <div class="form-group mr-1 mb-2">
                             <input type="text" class="sm" name="recherche" 
@@ -33,12 +34,14 @@
                     </form>            
                 </th>
                 <th class="text-center align-top" scope="col">
+                    Nb formations
+                </th>
+                <th class="text-center align-top" scope="col">
                     &nbsp;
                 </th>				
             </tr>
         </thead>
         <tbody>
-            <!-- boucle sur les playlists -->
             {% if playlists|length > 0 %}
                 {% for k in 0..playlists|length-1 %}
                     <tr class="align-middle">
@@ -51,10 +54,13 @@
                             {% set categories = playlists[k].categoriesplaylist %}
                             {% if categories|length > 0  %}
                                 {% for c in 0..categories|length-1 %}
-                                    &nbsp;{{ categories[c] }}                                  
+                                    &nbsp;{{ categories[c] }}<br />
                                 {% endfor %}
                             {% endif %}
-                        </td>            					
+                        </td>
+                        <td class="text-center">
+                            {{ playlists[k].nbformations }}
+                        </td>
                         <td class="text-center">
                             <a href="{{ path('playlists.showone', {id:playlists[k].id}) }}" class="btn btn-secondary">Voir détail</a>
                         </td> 					
