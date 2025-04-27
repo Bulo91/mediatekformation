@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Repository\CategorieRepository;
@@ -9,24 +10,55 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Contrôleur des formations
+ * Contrôleur pour la gestion des formations sur le front-office.
  *
+ * Permet d'afficher la liste, trier, filtrer et consulter les détails d'une formation.
+ * 
  * @author emds
  */
 class FormationsController extends AbstractController
-{
+{   
+    /**
+     * Chemin du template utilisé pour l'affichage de la liste des formations.
+     */
     private const TEMPLATE_FORMATIONS = 'pages/formations.html.twig';
+
+    /**
+     * Chemin du template utilisé pour l'affichage du détail d'une formation.
+     */
     private const TEMPLATE_FORMATION = 'pages/formation.html.twig';
 
+    /**
+     * Repository pour accéder aux formations.
+     *
+     * @var FormationRepository
+     */
     private $formationRepository;
+    
+    /**
+     * Repository pour accéder aux catégories.
+     *
+     * @var CategorieRepository
+     */
     private $categorieRepository;
 
+    /**
+     * Constructeur pour injecter les repositories Formation et Categorie.
+     *
+     * @param FormationRepository $formationRepository
+     * @param CategorieRepository $categorieRepository
+     */
     public function __construct(FormationRepository $formationRepository, CategorieRepository $categorieRepository)
     {
         $this->formationRepository = $formationRepository;
         $this->categorieRepository = $categorieRepository;
     }
-
+    
+    /**
+     * Affiche toutes les formations disponibles avec leurs catégories.
+     *
+     * @return Response
+     */
     #[Route('/formations', name: 'formations')]
     public function index(): Response
     {
@@ -38,6 +70,14 @@ class FormationsController extends AbstractController
         ]);
     }
 
+    /**
+     * Tri les formations selon un champ spécifique (titre, playlist, date...).
+     *
+     * @param string $champ Le champ sur lequel trier
+     * @param string $ordre L'ordre de tri (ASC ou DESC)
+     * @param string $table Table jointe si nécessaire (playlist ou categories)
+     * @return Response
+     */
     #[Route('/formations/tri/{champ}/{ordre}/{table}', name: 'formations.sort')]
     public function sort($champ, $ordre, $table = ""): Response
     {
@@ -49,6 +89,14 @@ class FormationsController extends AbstractController
         ]);
     }
 
+    /**
+     * Filtre les formations selon un critère donné (titre, playlist, catégorie).
+     *
+     * @param string $champ Champ à filtrer
+     * @param Request $request Objet contenant la valeur à rechercher
+     * @param string $table Table jointe si nécessaire
+     * @return Response
+     */
     #[Route('/formations/recherche/{champ}/{table}', name: 'formations.findallcontain')]
     public function findAllContain($champ, Request $request, $table = ""): Response
     {
@@ -63,6 +111,12 @@ class FormationsController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche le détail d'une seule formation sélectionnée.
+     *
+     * @param int $id ID de la formation
+     * @return Response
+     */
     #[Route('/formations/formation/{id}', name: 'formations.showone')]
     public function showOne($id): Response
     {

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-3">
+        <h2 class="text-info">Gestion des formations</h2>
+
+        <a href="{{ path('admin.formations.add') }}" class="btn btn-success mb-3">➕ Ajouter une formation</a>
+
+        <table class="table table-striped">
+            <caption>Liste des formations enregistrées</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Titre</th>
+                    <th scope="col">Playlist</th>
+                    <th scope="col">Catégories</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for formation in formations %}
+                    <tr>
+                        <td>{{ formation.title }}</td>
+                        <td>{{ formation.playlist.name }}</td>
+                        <td>
+                            {% for categorie in formation.categories %}
+                                {{ categorie.name }}<br>
+                            {% endfor %}
+                        </td>
+                        <td>{{ formation.publishedatstring }}</td>
+                        <td>
+                            <a href="{{ path('admin.formations.edit', {id: formation.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                            <a href="{{ path('admin.formations.delete', {id: formation.id}) }}"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Confirmer la suppression ?')">Supprimer</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

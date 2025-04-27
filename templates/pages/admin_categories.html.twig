@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-3">
+    <h2 class="text-info">Gestion des catégories</h2>
+
+    {# Affichage des messages flash #}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for msg in messages %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    {# Formulaire d’ajout #}
+    <div class="mb-4">
+        {{ form_start(form) }}
+        <div class="row g-2 align-items-end">
+            <div class="col-md-6">
+                {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Nom de la nouvelle catégorie'}}) }}
+                {{ form_errors(form.name) }}
+            </div>
+            <div class="col-md-auto">
+                <button type="submit" class="btn btn-success">➕ Ajouter</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+
+    {# Tableau des catégories existantes #}
+    <table class="table table-striped">
+        <caption>Liste des catégories</caption>
+        <thead>
+            <tr>
+                <th scope="col">Nom</th>
+                <th scope="col">Nb formations</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categorie in categories %}
+                <tr>
+                    <td>{{ categorie.name }}</td>
+                    <td>{{ categorie.formations|length }}</td>
+                    <td>
+                        <a href="{{ path('admin.categories.delete', {id: categorie.id}) }}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Confirmer la suppression ?')">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

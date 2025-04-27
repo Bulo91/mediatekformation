@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FormationRepository::class)]
 class Formation
@@ -15,28 +16,49 @@ class Formation
      * Début de chemin vers les images
      */
     private const CHEMIN_IMAGE = "https://i.ytimg.com/vi/";
-
+    
+    /**
+     * Identifiant unique de la formation.
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    
+    
+    /**
+     * Date de publication de la formation.
+     */
+    #[Assert\LessThanOrEqual('today', message: 'La date ne peut pas être dans le futur.')]
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $publishedAt = null;
-
+    
+    /**
+     * Titre de la formation.
+     */
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $title = null;
-
+    
+    /**
+     * Description détaillée de la formation.
+     */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
-
+    
+    /**
+     * Identifiant de la vidéo YouTube liée à la formation.
+     */
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $videoId = null;
-
+    
+    /**
+     * Playlist associée à la formation.
+     */
     #[ORM\ManyToOne(inversedBy: 'formations')]
     private ?Playlist $playlist = null;
 
     /**
+     * Liste des catégories associées à la formation.
      * @var Collection<int, Categorie>
      */
     #[ORM\ManyToMany(targetEntity: Categorie::class, inversedBy: 'formations')]
@@ -60,7 +82,6 @@ class Formation
     public function setPublishedAt(?\DateTimeInterface $publishedAt): static
     {
         $this->publishedAt = $publishedAt;
-
         return $this;
     }
 
@@ -80,7 +101,6 @@ class Formation
     public function setTitle(?string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -92,7 +112,6 @@ class Formation
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -104,7 +123,6 @@ class Formation
     public function setVideoId(?string $videoId): static
     {
         $this->videoId = $videoId;
-
         return $this;
     }
 
@@ -126,7 +144,6 @@ class Formation
     public function setPlaylist(?Playlist $playlist): static
     {
         $this->playlist = $playlist;
-
         return $this;
     }
 
@@ -143,14 +160,12 @@ class Formation
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
         }
-
         return $this;
     }
 
     public function removeCategory(Categorie $category): static
     {
         $this->categories->removeElement($category);
-
         return $this;
     }
 }

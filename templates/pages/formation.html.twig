@@ -1,33 +1,49 @@
 {% extends "basefront.html.twig" %}
+
 {% block body %}
     <div class="row mt-3">
         <div class="col">
-            <!-- emplacement de la vidéo -->
-            {% if formation.videoid %}
-                <div style="width: 560px; height: 315px; float: none; clear: both; margin: 2px auto;">
-                  <embed
-                    src="https://www.youtube.com/embed/{{ formation.videoid }}" 
-                    wmode="transparent"
-                    type="video/mp4"
-                    width="100%" height="100%"
-                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
-                    allowfullscreen
-                    title="YouTube video player"
-                  >
-                </div>                                             
-            {% endif %}
-        </div>
-        <div class="col">
-            {{ formation.publishedatstring }}
-            <h4 class="text-info mt-5">{{ formation.title }}</h4>
-            <strong>playlist : </strong>{{ formation.playlist.name }}<br />
-            <strong>catégories : </strong>
+            <h5 class="text-info mt-5">{{ formation.title }}</h5>
+
+            <p>
+                <strong>Playlist :</strong>
+                {% if formation.playlist is not null %}
+                    {{ formation.playlist.name }}
+                {% else %}
+                    Aucune playlist
+                {% endif %}
+            </p>
+
+            <p>
+                <strong>Catégories :</strong><br />
                 {% for categorie in formation.categories %}
-                    {{ categorie.name }}&nbsp;
+                    {{ categorie.name }}<br />
+                {% else %}
+                    Pas de catégorie
                 {% endfor %}
-            <br /><br />
-            <strong>description :</strong><br />
+            </p>
+
+            <p>
+                <strong>Description :</strong><br />
                 {{ formation.description|nl2br }}
+            </p>
+
+            <p>
+                <strong>Date de parution :</strong><br />
+                {{ formation.publishedatstring }}
+            </p>
+        </div>
+
+        <div class="col">
+            {% if formation.videoId %}
+                <iframe width="100%" height="315"
+                    src="https://www.youtube.com/embed/{{ formation.videoId }}"
+                    title="Vidéo YouTube"
+                    style="border:0;"  <!-- 👉 CSS ici au lieu de frameborder -->
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

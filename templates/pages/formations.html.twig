@@ -69,7 +69,11 @@
                         </h5>
                     </td>
                     <td class="text-left">
-                        {{ formation.playlist.name }}                  
+                        {% if formation.playlist is not null %}
+                            {{ formation.playlist.name }}
+                        {% else %}
+                            Aucune playlist
+                        {% endif %}
                     </td>                    
                     <td class="text-left">
                         {% for categorie in formation.categories %}
